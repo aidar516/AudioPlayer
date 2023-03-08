@@ -30,29 +30,32 @@ namespace АудиоПлеер
     {
         int a = 0;
         private bool _isPlaying = false;
+        private List<string> _playlist = new List<string>();
         private bool isRepeat = false;
         private bool isShuffle = false;
-        private readonly MediaPlayer _mediaPlayer = new MediaPlayer();
-        private List<string> _playlist = new List<string>();
-        private bool _isMediaPlaying = false;
+
+
 
         public MainWindow()
         {
             InitializeComponent();
             Thread t = new Thread(ChangeSeconds);
             t.Start();
-        }
 
+        }
         private void ChangeSeconds()
         {
             while (true)
             {
                 Thread.Sleep(1000);
-                this.Dispatcher.Invoke(new Action(() =>
+                Dispatcher.Invoke(() =>
                 {
                     Timer.Text = media.Position.Minutes + ":" + media.Position.Seconds;
-                    
-                }));
+                    var currentPosition = media.Position.Ticks;
+                    SliderMusic.Value = currentPosition;
+                });
+
+                Thread.Sleep(100);
             }
         }
 
@@ -66,16 +69,11 @@ namespace АудиоПлеер
                  .Where(file => file.EndsWith(".mp3") || file.EndsWith(".m4a") || file.EndsWith(".wav")).ToList();
                 foreach (string files in _playlist)
                 {
-                    ListBox.Items.Add(files);
+                    MediaList.Items.Add(files);
                 }
             }
-
-            media.Source = new Uri("C:\\Users\\valiu\\Desktop\\Мусорка\\Музыка\\Artik_Asti_-_Devochka_tancujj_68289048.mp3");
+            media.Source = new Uri("C:\\Users\\valiu\\Desktop\\Свалка\\Музыка\\Artik_Asti_-_Devochka_tancujj_68289048.mp3");
             media.Play();
-            media.Volume = 0.5;
-            
-        
-        
         }
 
         private void SliderMusic_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -84,82 +82,52 @@ namespace АудиоПлеер
             Timer.Text = media.Position.Minutes + ":" + media.Position.Seconds;
         }
 
-        private void media_MediaOpened(object sender, RoutedEventArgs e) 
+        private void media_MediaOpened(object sender, RoutedEventArgs e)
         {
             SliderMusic.Maximum = media.NaturalDuration.TimeSpan.Ticks;
             Timer.Text = media.NaturalDuration.TimeSpan.Minutes + ":" + media.NaturalDuration.TimeSpan.Seconds;
         }
 
-        private void UpdatePosition()
+
+        private void SliderVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            while (true)
+            media.Volume = 0.2;
+            media.Volume = SliderVolume.Value;
+        }
+
+        private void StartPauseBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isPlaying)
             {
-                if (_isMediaPlaying)
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        var totalTime = _mediaPlayer.NaturalDuration.TimeSpan.TotalSeconds;
-                        var currentPosition = _mediaPlayer.Position.TotalSeconds;
-
-                        SliderMusic.Minimum = 0;
-                        SliderMusic.Maximum = totalTime;
-                        SliderMusic.Value = currentPosition;
-                    });
-                }
-
-                Thread.Sleep(100);
+                media.Pause();
+                _isPlaying= false;
+                
             }
-        }
-
-        private void SliderValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            
-        }
-
-        private void StartBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (a == 1)
+            else
             {
                 media.Play();
-                a--;
+                _isPlaying= true;
             }
+            
         }
 
         private void StopBtn_Click(object sender, RoutedEventArgs e)
         {
-            if(a == 0)
+            if (_isPlaying)
             {
                 media.Stop();
-                a++;
+                _isPlaying= false;
             }
-            
-            
         }
 
         private void RepeatBtn_Click(object sender, RoutedEventArgs e)
         {
-            isRepeat = !isRepeat;
-            if (isRepeat)
-            {
-                repeatButton.Opacity = 1;
-            }
-            else
-            {
-                repeatButton.Opacity = 0.5;
-            }
+            
         }
 
         private void RandomBtn_Click(object sender, RoutedEventArgs e)
         {
-            isShuffle = !isShuffle;
-            if (isShuffle)
-            {
-                shuffleButton.Opacity = 1;
-            }
-            else
-            {
-                shuffleButton.Opacity = 0.5;
-            }
+            
         }
 
         private void NextBtn_Click(object sender, RoutedEventArgs e)

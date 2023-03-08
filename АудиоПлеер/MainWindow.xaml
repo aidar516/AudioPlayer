@@ -24,42 +24,36 @@
             <RowDefinition Height="0.15*"/>
             <RowDefinition Height="0.15*"/>
         </Grid.RowDefinitions>
-        <ListBox x:Name="ListBox" Grid.ColumnSpan="8"/>
+        <ListBox x:Name="MediaList" 
+                 Grid.ColumnSpan="8"/>
         <MediaElement x:Name="media" 
                       LoadedBehavior="Manual" 
                       MediaOpened="media_MediaOpened" 
                       Grid.RowSpan="2"
                       Grid.ColumnSpan="8"/>
         <Slider x:Name="SliderMusic" 
-            Grid.Row="1" Grid.ColumnSpan="8" 
-            VerticalAlignment="Center" 
-            ValueChanged="SliderMusic_ValueChanged" 
-            Minimum="0" Maximum="70" 
-            Value="0"/>
+                Grid.Row="1" Grid.ColumnSpan="8" 
+                VerticalAlignment="Center" 
+                ValueChanged="SliderMusic_ValueChanged" 
+                Minimum="0" Maximum="1" 
+                Value="0"/>
+        <Slider x:Name="SliderVolume" 
+                Grid.Row="2" 
+                Grid.Column="7"
+                VerticalAlignment="Center"
+                Value="6"
+                ValueChanged="SliderVolume_ValueChanged" />
         <TextBlock Grid.Row="1" 
                    VerticalAlignment="Top"
                    x:Name="Timer"
                    Text="00:00"
                    FontSize="18"
                    HorizontalAlignment="Left"/>
-        <TextBlock Grid.Row="1" 
-                   Grid.Column="8"
-                   VerticalAlignment="Top"
-                   x:Name="Timer1"
-                   Text="00:00"
-                   FontSize="18"
-                   HorizontalAlignment="Right"/>
-        <Slider x:Name="SliderValue" 
-                Grid.Row="2" 
-                Grid.Column="7"
-                VerticalAlignment="Center"
-                ValueChanged="SliderValue_ValueChanged" />
         <TextBlock Text="Громкость" 
                    Grid.Column="6" 
                    FontSize="20" 
                    VerticalAlignment="Center" 
-                   Grid.Row="2"
-                   />
+                   Grid.Row="2"/>
         <Button x:Name="OpenBtn" 
                 Content="Открть папку с музыкой" 
                 FontSize="18" 
@@ -72,9 +66,11 @@
                 Content="Назад"
                 Click="BackBtn_Click"/>
         <Button Grid.Row="2" 
-                Grid.Column="1" 
-                Content="Старт"
-                Click="StartBtn_Click"/>
+                Grid.Column="1"
+                FontSize="12"
+                x:Name="PlayPauseButton"
+                Content="Старт/Пауза"
+                Click="StartPauseBtn_Click"/>
         <Button Grid.Row="2" 
                 Grid.Column="2" 
                 Content="Стоп"
